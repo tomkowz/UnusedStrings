@@ -42,15 +42,17 @@ if [ $source != '' ]; then
 				if [ $remove -eq 0 ]; then
 					echo $singleString;
 				else
-					# get a line to remove
-					line=$(grep -n $singleString $filePath | cut -d: -f1);
 					#
 					d="d"; 
 					copy="_copy";
 					copyFile=$(echo $filePath$copy);
 					
 					#remove lines
-					sed $line$d $filePath > $copyFile;
+					sed "/$singleString/$d" $filePath > $copyFile;
+					if [ $? -ne 0 ]; then
+						echo "$singleString cannot remove."
+						continue
+					fi
 					mv $copyFile $filePath;
 					rm -f $copyFile;
 					echo "$singleString removed.";
